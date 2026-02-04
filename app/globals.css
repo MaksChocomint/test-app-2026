@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-nunito: var(--font-nunito);
+
+  --color-brand-mint: #4cbab3;
+  --color-brand-orange: #f49e3f;
+  --color-brand-beige: #fdfcfb;
+  --color-brand-dark: #1a3d42;
+  --color-brand-mint-light: #d2f3f0;
+
+  --color-background: var(--color-brand-beige);
+  --color-text-main: var(--color-brand-dark);
+}
+
+@layer base {
+  body {
+    @apply bg-brand-beige text-brand-dark font-nunito;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-extrabold tracking-tight;
+  }
+
+  textarea:focus,
+  input:focus {
+    @apply outline-none;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+}

@@ -1,0 +1,29 @@
+services:
+  # База данных
+  db:
+    image: postgres:latest
+    container_name: happypet_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: happypet_clinic
+    ports:
+      - "8080:5432"
+    volumes:
+      - happyclinic_data:/var/lib/postgresql
+
+  # Приложение Next.js
+  app:
+    build: .
+    container_name: happypet_app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/happypet_clinic?schema=publicc"
+    depends_on:
+      - db
+
+volumes:
+  happyclinic_data:

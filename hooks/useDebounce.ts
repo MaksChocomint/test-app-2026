@@ -1,0 +1,17 @@
+// Если будет много питомцев и мы будем обращаться к базе данных каждый раз при фильтрации
+
+import { useEffect, useState } from "react";
+
+export const useDebounce = <T>(value: T, delay: number = 500): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+};

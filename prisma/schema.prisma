@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// Статус записи на прием
+enum AppointmentStatus {
+  SCHEDULED 
+  CONFIRMED 
+  CANCELLED 
+
+}
+
+// Вид питомца
+enum Species {
+  DOG
+  CAT
+  BIRD
+  RODENT
+  REPTILE
+  FISH
+  OTHER
+}
+
+// Пол питомца
+enum Gender {
+  MALE
+  FEMALE
+  UNKNOWN
+}
+
+// Владелец питомца
+model Owner {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String   @unique
+  address   String?
+  pets      Pet[]
+  createdAt DateTime @default(now())
+}
+
+// Питомец
+model Pet {
+  id             String          @id @default(cuid())
+  name           String
+  species        Species
+  breed          String?
+  birthDate      DateTime?
+  gender         Gender
+  ownerId        String
+  owner          Owner           @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  medicalRecords MedicalRecord[]
+  appointments   Appointment[]  
+  createdAt      DateTime        @default(now())
+
+  @@index([ownerId])
+}
+
+// Ветеринар
+model Vet {
+  id             String          @id @default(cuid())
+  name           String
+  specialization String?         // Например: Терапевт, Хирург, Офтальмолог
+  phone          String?
+  appointments   Appointment[]
+  medicalRecords MedicalRecord[]
+  createdAt      DateTime        @default(now())
+}
+
+// Запись на прием к ветеринару
+model Appointment {
+  id        String            @id @default(cuid())
+  date      DateTime
+  status    AppointmentStatus @default(SCHEDULED)
+  reason    String            // Причина визита (например: "ежегодная вакцинация")
+  petId     String
+  pet       Pet               @relation(fields: [petId], references: [id])
+  vetId     String
+  vet       Vet               @relation(fields: [vetId], references: [id])
+  
+  medicalRecord MedicalRecord? 
+
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@index([petId])
+  @@index([vetId])
+}
+
+// Запись в медицинской карте
+model MedicalRecord {
+  id            String   @id @default(cuid())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Протокол осмотра
+  complaints    String    // Жалобы от владельца
+  examination   String    // Результаты осмотра
+  diagnosis     String    // Диагноз
+  treatment     String?   // Назначенное лечение
+  recommendations String? // Рекомендации 
+  
+  petId         String
+  pet           Pet      @relation(fields: [petId], references: [id])
+  vetId         String
+  vet           Vet      @relation(fields: [vetId], references: [id])
+  
+  appointmentId String?  @unique // Осмотр как по записи, так и без
+  appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+
+  @@index([petId])
+}
