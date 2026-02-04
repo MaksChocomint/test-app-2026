@@ -1,17 +1,16 @@
 # 🐾 HappyPets — Ветеринарная Клиника
 
-<p align="center">
-    <img src="public/cat/cat_idle.webp" width="200" alt="HappyPets Cat" />
-</p>
+<img src="public/cat/cat_idle.webp" width="200" alt="HappyPets Cat" />
 
-![Brand Color](https://img.shields.io/badge/Brand-Mint--4cbab3?style=for-the-badge&color=4cbab3)
-![Accent Color](https://img.shields.io/badge/Accent-Orange--f49e3f?style=for-the-badge&color=f49e3f)
-![UI Color](https://img.shields.io/badge/UI-Beige--fdfcfb?style=for-the-badge&color=fdfcfb&labelColor=1a3d42)
 Добро пожаловать в **HappyPets** — современное приложение для управления ветеринарной клиникой. Данный проект сфокусирован на реализации удобной системы **медицинских карточек** питомцев, позволяя врачам эффективно отслеживать историю болезни .
 
 ---
 
 ## 🎨 Айдентика и стиль
+
+![Brand Color](https://img.shields.io/badge/Brand-Mint--4cbab3?style=for-the-badge&color=4cbab3)
+![Accent Color](https://img.shields.io/badge/Accent-Orange--f49e3f?style=for-the-badge&color=f49e3f)
+![UI Color](https://img.shields.io/badge/UI-Beige--fdfcfb?style=for-the-badge&color=fdfcfb&labelColor=1a3d42)
 
 Приложение выполнено в уникальной цветовой палитре, идеально подходящей вет-клинике и подчеркивающей дружелюбие и профессионализм:
 
@@ -25,13 +24,9 @@
 
 ## 🛠 Технологический стек
 
-<div align="center">
-
 ![Next.js](https://img.shields.io/badge/Next.js-16-1a3d42?style=flat-square&logo=next.js)
 ![Prisma](https://img.shields.io/badge/Prisma-7-4cbab3?style=flat-square&logo=prisma)
 ![Tailwind](https://img.shields.io/badge/Tailwind-4-f49e3f?style=flat-square&logo=tailwindcss)
-
-</div>
 
 | Слой                   | Технологии                              |
 | ---------------------- | --------------------------------------- |
@@ -108,8 +103,8 @@ _Примечание: Dockerfile приложения не включает в 
 
 В основе приложения лежит продуманная реляционная структура, описывающая взаимоотношения между владельцами, их питомцами, записями на прием и медицинскими записями, составляющими **медицинскую карточку**.
 
-_Схема ER-Диаграммы_
-![[er-diagram.png]]
+_ER-Диаграмма_
+<img src="er-diagram.png" alt="er-diagram" />
 
 ---
 
