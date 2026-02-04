@@ -139,4 +139,5 @@ _ER-Диаграмма_
 **Разработано с ❤️** Если у вас возникли вопросы по запуску, свяжитесь со мной!
 
 TELEGRAM: t.me/makschocomint
+
 EMAIL: makschocomint@gmail.com
