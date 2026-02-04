@@ -74,7 +74,8 @@ bunx prisma generate # или npx prisma generate
 bunx prisma migrate dev # или npx prisma migrate dev
 
 # Наполнение базы тестовыми данными (ОБЯЗАТЕЛЬНО)
-# Так как реализован CRUD именно карточек, нужны предзаполненные владельцы, питомцы, ветеринары и записи на осмотр
+# Так как реализован CRUD именно карточек, нужны предзаполненные владельцы,
+питомцы, ветеринары и записи на осмотр
 bunx tsx prisma/seed.ts # или npx tsx prisma/seed.ts
 ```
 
