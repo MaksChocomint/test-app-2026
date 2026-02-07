@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft } from "lucide-react";
@@ -49,9 +49,9 @@ export const MedicalRecordForm = ({
   });
 
   // Находим выбранного питомца
-  const selectedPet = pets.find(
-    (pet) => pet.id === (selectedPetId || storeSelectedPetId),
-  );
+  const selectedPet = useMemo(() => {
+    return pets.find((pet) => pet.id === (selectedPetId || storeSelectedPetId));
+  }, [pets, selectedPetId, storeSelectedPetId]);
 
   // Сохраняем в состояние выбранного питомца
   useEffect(() => {
@@ -81,30 +81,27 @@ export const MedicalRecordForm = ({
     loadAppointments();
   }, [currentPetId]);
 
-  const onSubmit = useCallback(
-    async (data: MedicalRecordFormData) => {
-      try {
-        const formData = {
-          ...data,
-          appointmentId: data.appointmentId?.trim() || null,
-        };
+  const onSubmit = async (data: MedicalRecordFormData) => {
+    try {
+      const formData = {
+        ...data,
+        appointmentId: data.appointmentId?.trim() || null,
+      };
 
-        await addMedicalRecord(formData);
-        reset();
-        onSuccess();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        const errorMessage =
-          error.response?.data?.error ||
-          error.message ||
-          "Ошибка при создании медицинской записи";
+      await addMedicalRecord(formData);
+      reset();
+      onSuccess();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.error ||
+        error.message ||
+        "Ошибка при создании медицинской записи";
 
-        setAlertMessage(errorMessage);
-        setShowAlertModal(true);
-      }
-    },
-    [addMedicalRecord, onSuccess, reset],
-  );
+      setAlertMessage(errorMessage);
+      setShowAlertModal(true);
+    }
+  };
 
   return (
     <>

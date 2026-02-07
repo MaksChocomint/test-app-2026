@@ -69,8 +69,7 @@ export const MedicalRecordsTable = React.memo(
       // Загружаем данные при изменении petId
       useEffect(() => {
         void fetchRecords();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, [petId]);
+      }, [fetchRecords]);
 
       const handleDeleteClick = useCallback((id: string) => {
         setRecordToDelete(id);
@@ -138,8 +137,6 @@ export const MedicalRecordsTable = React.memo(
         setExpandedId((prev) => (prev === id ? null : id));
       }, []);
 
-      const memoizedRecords = useMemo(() => records, [records]);
-
       if (loading) {
         return (
           <div className="flex justify-center items-center h-64">
@@ -158,7 +155,7 @@ export const MedicalRecordsTable = React.memo(
             </div>
 
             <div className="divide-y divide-gray-200">
-              {memoizedRecords.map((record) => (
+              {records.map((record) => (
                 <MedicalRecordRow
                   key={record.id}
                   record={record}
@@ -170,7 +167,7 @@ export const MedicalRecordsTable = React.memo(
               ))}
             </div>
 
-            {memoizedRecords.length === 0 && petId && (
+            {records.length === 0 && petId && (
               <div className="text-center py-12">
                 <FileText className="h-12 w-12 text-gray-400 mx-auto mb-3" />
                 <p className="text-gray-500">Нет медицинских записей</p>
