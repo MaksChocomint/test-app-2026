@@ -33,4 +33,3 @@ export const Textarea = React.memo(
 );
 
 Textarea.displayName = "Textarea";
-Textarea.displayName = "Textarea";
