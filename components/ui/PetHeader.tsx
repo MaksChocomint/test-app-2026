@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-export const PetHeader = React.memo(() => {
+export const PetHeader = () => {
   return (
     <div className="relative w-40 h-40 shrink-0">
       <Image
@@ -14,6 +14,4 @@ export const PetHeader = React.memo(() => {
       />
     </div>
   );
-});
-
-PetHeader.displayName = "PetHeader";
+};
