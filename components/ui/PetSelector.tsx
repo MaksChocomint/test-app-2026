@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { Pet } from "@/types/medicalRecord";
 import { Button } from "@/components/ui/Button";
 import { Search, X } from "lucide-react";
@@ -27,16 +27,18 @@ export const PetSelector = React.memo(
     const [searchQuery, setSearchQuery] = useState("");
 
     // Фильтрация питомцев по поисковому запросу
-    const filteredPets = pets.filter((pet) => {
-      const query = searchQuery.toLowerCase();
-      if (!query) return true;
+    const filteredPets = useMemo(() => {
+      return pets.filter((pet) => {
+        const query = searchQuery.toLowerCase();
+        if (!query) return true;
 
-      return (
-        pet.name.toLowerCase().includes(query) ||
-        pet.owner.name.toLowerCase().includes(query) ||
-        getSpeciesName(pet.species).toLowerCase().includes(query)
-      );
-    });
+        return (
+          pet.name.toLowerCase().includes(query) ||
+          pet.owner.name.toLowerCase().includes(query) ||
+          getSpeciesName(pet.species).toLowerCase().includes(query)
+        );
+      });
+    }, [pets, searchQuery]);
 
     const handleSelectChange = useCallback(
       (e: React.ChangeEvent<HTMLSelectElement>) => {
