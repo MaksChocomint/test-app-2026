@@ -8,9 +8,10 @@ import api from "@/lib/axios";
 import { Appointment } from "@/types/medicalRecord";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
-import { FormField } from "./FormField";
+import { Select } from "@/components/ui/Select";
 import { ModalDialog } from "@/components/ui/ModalDialog";
 import { useMedicalStore } from "@/store/medicalStore";
+import { AxiosError } from "axios";
 
 interface MedicalRecordFormProps {
   onSuccess: () => void;
@@ -48,12 +49,10 @@ export const MedicalRecordForm = ({
     name: "petId",
   });
 
-  // Находим выбранного питомца
   const selectedPet = useMemo(() => {
     return pets.find((pet) => pet.id === (selectedPetId || storeSelectedPetId));
   }, [pets, selectedPetId, storeSelectedPetId]);
 
-  // Сохраняем в состояние выбранного питомца
   useEffect(() => {
     const petId = selectedPetId || storeSelectedPetId;
     if (petId) {
@@ -61,11 +60,8 @@ export const MedicalRecordForm = ({
     }
   }, [selectedPetId, storeSelectedPetId, setValue]);
 
-  // Загрузка записей на прием
   useEffect(() => {
-    if (!currentPetId) {
-      return;
-    }
+    if (!currentPetId) return;
 
     const loadAppointments = async () => {
       try {
@@ -91,11 +87,12 @@ export const MedicalRecordForm = ({
       await addMedicalRecord(formData);
       reset();
       onSuccess();
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+    } catch (error) {
+      const axiosError = error as AxiosError<{ error: string }>;
+
       const errorMessage =
-        error.response?.data?.error ||
-        error.message ||
+        axiosError.response?.data?.error ||
+        axiosError.message ||
         "Ошибка при создании медицинской записи";
 
       setAlertMessage(errorMessage);
@@ -122,7 +119,6 @@ export const MedicalRecordForm = ({
           </h2>
         </div>
 
-        {/* Информация о выбранном питомце */}
         {selectedPet && (
           <div className="bg-gray-50 rounded-lg p-4 mb-4">
             <p className="font-medium text-gray-800">
@@ -132,42 +128,39 @@ export const MedicalRecordForm = ({
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Скрытое поле для petId */}
           <input type="hidden" {...register("petId")} />
 
-          <FormField label="Ветеринар" error={errors.vetId?.message} required>
-            <select
-              {...register("vetId")}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-mint focus:border-transparent"
-            >
-              <option value="">Выберите ветеринара</option>
-              {vets.map((vet) => (
-                <option key={vet.id} value={vet.id}>
-                  {vet.name}{" "}
-                  {vet.specialization ? `(${vet.specialization})` : ""}
-                </option>
-              ))}
-            </select>
-          </FormField>
+          <Select
+            {...register("vetId")}
+            label="Ветеринар"
+            error={errors.vetId?.message}
+            required
+          >
+            <option value="">Выберите ветеринара</option>
+            {vets.map((vet) => (
+              <option key={vet.id} value={vet.id}>
+                {vet.name} {vet.specialization ? `(${vet.specialization})` : ""}
+              </option>
+            ))}
+          </Select>
 
           <div className="md:col-span-2">
-            <FormField label="Запись на прием">
-              <select
-                {...register("appointmentId")}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-mint focus:border-transparent"
-              >
-                <option value="">Выберите запись на прием (если есть)</option>
-                {appointments.map((appointment) => (
-                  <option key={appointment.id} value={appointment.id}>
-                    {new Date(appointment.date).toLocaleDateString()} -{" "}
-                    {appointment.reason}
-                  </option>
-                ))}
-              </select>
-              <p className="text-sm text-gray-500 mt-1">
-                Можно оставить пустым для приема без запси
-              </p>
-            </FormField>
+            <Select
+              {...register("appointmentId")}
+              label="Запись на прием"
+              error={errors.appointmentId?.message}
+            >
+              <option value="">Выберите запись на прием (если есть)</option>
+              {appointments.map((appointment) => (
+                <option key={appointment.id} value={appointment.id}>
+                  {new Date(appointment.date).toLocaleDateString()} -{" "}
+                  {appointment.reason}
+                </option>
+              ))}
+            </Select>
+            <p className="text-sm text-gray-500 mt-1">
+              Можно оставить пустым для приема без записи
+            </p>
           </div>
 
           <div className="md:col-span-2">
@@ -207,6 +200,7 @@ export const MedicalRecordForm = ({
             <Textarea
               {...register("treatment")}
               label="Назначенное лечение"
+              error={errors.treatment?.message}
               rows={2}
               placeholder="Прописанное лечение и препараты..."
             />
@@ -216,6 +210,7 @@ export const MedicalRecordForm = ({
             <Textarea
               {...register("recommendations")}
               label="Рекомендации"
+              error={errors.recommendations?.message}
               rows={2}
               placeholder="Рекомендации владельцу..."
             />
@@ -245,7 +240,6 @@ export const MedicalRecordForm = ({
         </div>
       </form>
 
-      {/* Модальное окно уведомления */}
       <ModalDialog
         isOpen={showAlertModal}
         title="Уведомление"
